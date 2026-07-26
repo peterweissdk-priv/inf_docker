@@ -1,31 +1,65 @@
 #!/usr/bin/env bash
 set -e
 
-# --- CONFIGURATION / VARIABLES ---
-# Can be modified directly here, or passed as arguments during execution:
-# Example: ./deploy.sh prod /server/prod
-ENV="${1:-prod}"
-SECRET_PATH="${2:-/buzz/hawser}"
+# --- CONFIGURATION ---
+# Reads ENV and SECRET_PATH from ./inf.env in current working directory
+# Can be overwritten with arguments: -e <ENV> -p <SECRET_PATH>
+# Use -d to run docker compose in detached/daemonized mode
+
+DAEMONIZE=false
+ENV=""
+SECRET_PATH=""
+
+# Parse arguments
+while getopts "de:p:" opt; do
+    case $opt in
+        d) DAEMONIZE=true ;;
+        e) ENV="$OPTARG" ;;
+        p) SECRET_PATH="$OPTARG" ;;
+        *) echo "Usage: inf_docker [-d] [-e ENV] [-p SECRET_PATH]"; exit 1 ;;
+    esac
+done
+
+# Load defaults from inf.env if it exists and values not set via arguments
+INF_ENV_FILE="./inf.env"
+if [[ -f "$INF_ENV_FILE" ]]; then
+    # Source the file to get defaults
+    source "$INF_ENV_FILE"
+    # Use sourced values only if not already set via arguments
+    ENV="${ENV:-$INF_ENV}"
+    SECRET_PATH="${SECRET_PATH:-$INF_SECRET_PATH}"
+fi
+
+# Validate required values
+if [[ -z "$ENV" || -z "$SECRET_PATH" ]]; then
+    echo "❌ Error: ENV and SECRET_PATH are required."
+    echo "   Provide them via ./inf.env or arguments: -e <ENV> -p <SECRET_PATH>"
+    exit 1
+fi
 
 echo "🚀 Fetching secrets for environment [$ENV] at path [$SECRET_PATH]..."
 
 # Run Infisical with variables and start Docker
-infisical run --env="$ENV" --path="$SECRET_PATH" -- docker compose up -d
+if [[ "$DAEMONIZE" == true ]]; then
+    infisical run --env="$ENV" --path="$SECRET_PATH" -- docker compose up -d
 
-echo "✅ Containers started successfully!"
-echo ""
+    echo "✅ Containers started successfully!"
+    echo ""
 
-# Display status of the started container
-echo "📊 Started container status:"
-docker ps --filter "id=$(docker compose ps -q)" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+    # Display status of the started container
+    echo "📊 Started container status:"
+    docker ps --filter "id=$(docker compose ps -q)" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 
-echo ""
+    echo ""
 
-# Ask the user about viewing logs
-read -p "Do you want to view running logs now? (y/n): " ANSWER
+    # Ask the user about viewing logs
+    read -p "Do you want to view running logs now? (y/n): " ANSWER
 
-# Check if the answer is 'y' or 'yes' (case-insensitive)
-if [[ "$ANSWER" =~ ^[Yy]([Ee][Ss])?$ ]]; then
-    echo "📋 Displaying logs (press Ctrl+C to close logs without stopping the containers)..."
-    docker compose logs -f
+    # Check if the answer is 'y' or 'yes' (case-insensitive)
+    if [[ "$ANSWER" =~ ^[Yy]([Ee][Ss])?$ ]]; then
+        echo "📋 Displaying logs (press Ctrl+C to close logs without stopping the containers)..."
+        docker compose logs -f
+    fi
+else
+    infisical run --env="$ENV" --path="$SECRET_PATH" -- docker compose up
 fi
