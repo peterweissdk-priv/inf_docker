@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+set -e
+
+# --- CONFIGURATION / VARIABLES ---
+# Can be modified directly here, or passed as arguments during execution:
+# Example: ./deploy.sh prod /server/prod
+ENV="${1:-prod}"
+SECRET_PATH="${2:-/buzz/hawser}"
+
+echo "🚀 Fetching secrets for environment [$ENV] at path [$SECRET_PATH]..."
+
+# Run Infisical with variables and start Docker
+infisical run --env="$ENV" --path="$SECRET_PATH" -- docker compose up -d
+
+echo "✅ Containers started successfully!"
+echo ""
+
+# Display status of the started container
+echo "📊 Started container status:"
+docker ps --filter "id=$(docker compose ps -q)" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+
+echo ""
+
+# Ask the user about viewing logs
+read -p "Do you want to view running logs now? (y/n): " ANSWER
+
+# Check if the answer is 'y' or 'yes' (case-insensitive)
+if [[ "$ANSWER" =~ ^[Yy]([Ee][Ss])?$ ]]; then
+    echo "📋 Displaying logs (press Ctrl+C to close logs without stopping the containers)..."
+    docker compose logs -f
+fi
