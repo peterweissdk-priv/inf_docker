@@ -19,10 +19,10 @@ echo "  -e ENV          Override environment (default from ./inf.env)"
 echo "  -p SECRET_PATH  Override secret path (default from ./inf.env)"
 echo ""
 
-read -p "Would you like to generate a template inf.env file? (y/n): " GENERATE_ENV
+read -p "Would you like to generate a template inf.env file? (y/n): " GENERATE_ENV </dev/tty
 
 if [[ "$GENERATE_ENV" =~ ^[Yy]([Ee][Ss])?$ ]]; then
-    read -p "Enter the path for inf.env (e.g. /path/to/project): " ENV_PATH
+    read -p "Enter the path for inf.env (e.g. /path/to/project): " ENV_PATH </dev/tty
     
     # Expand ~ to home directory
     ENV_PATH="${ENV_PATH/#\~/$HOME}"
