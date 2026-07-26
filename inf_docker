@@ -14,7 +14,7 @@ ENV=""
 SECRET_PATH=""
 
 # Parse arguments
-while getopts "de:p:u" opt; do
+while getopts "de:p:uv" opt; do
     case $opt in
         d) DAEMONIZE=true ;;
         e) ENV="$OPTARG" ;;
@@ -35,7 +35,11 @@ while getopts "de:p:u" opt; do
             fi
             exit 0
             ;;
-        *) echo "Usage: inf_docker [-d] [-e ENV] [-p SECRET_PATH] [-u]"; exit 1 ;;
+        v)
+            echo "inf_docker version $VERSION"
+            exit 0
+            ;;
+        *) echo "Usage: inf_docker [-d] [-e ENV] [-p SECRET_PATH] [-u] [-v]"; exit 1 ;;
     esac
 done
 
