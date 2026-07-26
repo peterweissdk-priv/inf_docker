@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-VERSION="0.2.3"
+VERSION="0.2.4"
 SCRIPT_URL="https://raw.githubusercontent.com/peterweissdk/inf_docker/main/inf_docker"
 
 # --- CONFIGURATION ---
@@ -42,6 +42,19 @@ while getopts "de:p:uv" opt; do
         *) echo "Usage: inf_docker [-d] [-e ENV] [-p SECRET_PATH] [-u] [-v]"; exit 1 ;;
     esac
 done
+
+# Check for required dependencies
+if ! command -v infisical &> /dev/null; then
+    echo "❌ Error: Infisical CLI is not installed."
+    echo "   Install it from: https://infisical.com/docs/cli/overview"
+    exit 1
+fi
+
+if ! docker compose version &> /dev/null; then
+    echo "❌ Error: Docker Compose is not installed."
+    echo "   Install Docker with Compose plugin: https://docs.docker.com/compose/install/"
+    exit 1
+fi
 
 # Load defaults from inf.env if it exists and values not set via arguments
 INF_ENV_FILE="./inf.env"
