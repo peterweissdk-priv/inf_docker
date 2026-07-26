@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
+VERSION="0.2.1"
+SCRIPT_URL="https://raw.githubusercontent.com/peterweissdk/inf_docker/main/inf_docker"
+
 # --- CONFIGURATION ---
 # Reads ENV and SECRET_PATH from ./inf.env in current working directory
 # Can be overwritten with arguments: -e <ENV> -p <SECRET_PATH>
@@ -11,12 +14,28 @@ ENV=""
 SECRET_PATH=""
 
 # Parse arguments
-while getopts "de:p:" opt; do
+while getopts "de:p:u" opt; do
     case $opt in
         d) DAEMONIZE=true ;;
         e) ENV="$OPTARG" ;;
         p) SECRET_PATH="$OPTARG" ;;
-        *) echo "Usage: inf_docker [-d] [-e ENV] [-p SECRET_PATH]"; exit 1 ;;
+        u)
+            echo "🔍 Checking for updates..."
+            REMOTE_VERSION=$(curl -fsSL "$SCRIPT_URL" | grep -m1 '^VERSION=' | cut -d'"' -f2)
+            if [[ "$REMOTE_VERSION" != "$VERSION" ]]; then
+                echo "📥 New version available: $REMOTE_VERSION (current: $VERSION)"
+                echo "📦 Updating..."
+                curl -fsSL "$SCRIPT_URL" -o /tmp/inf_docker
+                sudo mv /tmp/inf_docker /usr/local/bin/inf_docker
+                sudo chown root:root /usr/local/bin/inf_docker
+                sudo chmod 755 /usr/local/bin/inf_docker
+                echo "✅ Updated to version $REMOTE_VERSION"
+            else
+                echo "✅ Already running latest version ($VERSION)"
+            fi
+            exit 0
+            ;;
+        *) echo "Usage: inf_docker [-d] [-e ENV] [-p SECRET_PATH] [-u]"; exit 1 ;;
     esac
 done
 

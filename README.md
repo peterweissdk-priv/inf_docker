@@ -29,6 +29,7 @@ inf_docker -d -e staging -p /staging/secrets  # Combine options
 | `-d` | Run docker compose in detached mode |
 | `-e ENV` | Override Infisical environment (e.g. prod, dev, staging) |
 | `-p SECRET_PATH` | Override Infisical secret path |
+| `-u` | Check for updates and install if available |
 
 ## Configuration
 
