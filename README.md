@@ -47,3 +47,25 @@ Command-line arguments (`-e`, `-p`) take precedence over values in `inf.env`.
 
 - [Infisical CLI](https://infisical.com/docs/cli/overview) installed and authenticated
 - Docker and Docker Compose
+
+## Setup Infisical CLI
+
+Install Infisical CLI (Debian/Ubuntu):
+
+```bash
+curl -1sLf 'https://artifacts-cli.infisical.com/setup.deb.sh' | sudo -E bash
+sudo apt-get update && sudo apt-get install -y infisical
+```
+
+Login to Infisical:
+
+```bash
+infisical login
+```
+
+Initialize a docker compose directory with Infisical:
+
+```bash
+cd /path/to/your/docker-compose-project
+infisical init
+```
