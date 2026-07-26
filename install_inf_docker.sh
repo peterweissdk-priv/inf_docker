@@ -14,10 +14,12 @@ sudo chmod 755 "$INSTALL_PATH"
 
 echo "✅ inf_docker installed successfully!"
 echo ""
-echo "Usage: inf_docker [-d] [-e ENV] [-p SECRET_PATH]"
+echo "Usage: inf_docker [-d] [-e ENV] [-p SECRET_PATH] [-u] [-v]"
 echo "  -d              Run docker compose in detached mode"
 echo "  -e ENV          Override environment (default from ./inf.env)"
 echo "  -p SECRET_PATH  Override secret path (default from ./inf.env)"
+echo "  -u              Check for updates and install if available"
+echo "  -v              Show version"
 echo ""
 
 read -p "Would you like to generate a template inf.env file? (y/n): " GENERATE_ENV </dev/tty
