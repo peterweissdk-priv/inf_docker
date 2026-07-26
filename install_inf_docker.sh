@@ -9,7 +9,8 @@ curl -fsSL "$SCRIPT_URL" -o /tmp/inf_docker
 
 echo "📦 Installing to $INSTALL_PATH..."
 sudo mv /tmp/inf_docker "$INSTALL_PATH"
-sudo chmod +x "$INSTALL_PATH"
+sudo chown root:root "$INSTALL_PATH"
+sudo chmod 755 "$INSTALL_PATH"
 
 echo "✅ inf_docker installed successfully!"
 echo ""
