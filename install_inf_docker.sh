@@ -35,8 +35,8 @@ if [[ "$GENERATE_ENV" =~ ^[Yy]([Ee][Ss])?$ ]]; then
     if [[ -f "$ENV_FILE" ]]; then
         echo "⚠️  $ENV_FILE already exists. Skipping."
     else
-        mkdir -p "$ENV_PATH"
-        cat > "$ENV_FILE" << 'EOF'
+        sudo mkdir -p "$ENV_PATH"
+        sudo tee "$ENV_FILE" > /dev/null << 'EOF'
 # inf_docker configuration
 # Place this file as ./inf.env in your docker compose directory
 
