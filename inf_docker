@@ -1,8 +1,30 @@
 #!/usr/bin/env bash
 set -e
 
-VERSION="0.2.4"
+VERSION="0.2.5"
 SCRIPT_URL="https://raw.githubusercontent.com/peterweissdk/inf_docker/main/inf_docker"
+
+# --- FUNCTIONS ---
+
+show_version() {
+    echo "inf_docker version $VERSION"
+}
+
+check_for_updates() {
+    echo "🔍 Checking for updates..."
+    REMOTE_VERSION=$(curl -fsSL "$SCRIPT_URL" | grep -m1 '^VERSION=' | cut -d'"' -f2)
+    if [[ "$REMOTE_VERSION" != "$VERSION" ]]; then
+        echo "📥 New version available: $REMOTE_VERSION (current: $VERSION)"
+        echo "📦 Updating..."
+        curl -fsSL "$SCRIPT_URL" -o /tmp/inf_docker
+        sudo mv /tmp/inf_docker /usr/local/bin/inf_docker
+        sudo chown root:root /usr/local/bin/inf_docker
+        sudo chmod 755 /usr/local/bin/inf_docker
+        echo "✅ Updated to version $REMOTE_VERSION"
+    else
+        echo "✅ Already running latest version ($VERSION)"
+    fi
+}
 
 # --- CONFIGURATION ---
 # Reads ENV and SECRET_PATH from ./inf.env in current working directory
@@ -19,26 +41,8 @@ while getopts "de:p:uv" opt; do
         d) DAEMONIZE=true ;;
         e) ENV="$OPTARG" ;;
         p) SECRET_PATH="$OPTARG" ;;
-        u)
-            echo "🔍 Checking for updates..."
-            REMOTE_VERSION=$(curl -fsSL "$SCRIPT_URL" | grep -m1 '^VERSION=' | cut -d'"' -f2)
-            if [[ "$REMOTE_VERSION" != "$VERSION" ]]; then
-                echo "📥 New version available: $REMOTE_VERSION (current: $VERSION)"
-                echo "📦 Updating..."
-                curl -fsSL "$SCRIPT_URL" -o /tmp/inf_docker
-                sudo mv /tmp/inf_docker /usr/local/bin/inf_docker
-                sudo chown root:root /usr/local/bin/inf_docker
-                sudo chmod 755 /usr/local/bin/inf_docker
-                echo "✅ Updated to version $REMOTE_VERSION"
-            else
-                echo "✅ Already running latest version ($VERSION)"
-            fi
-            exit 0
-            ;;
-        v)
-            echo "inf_docker version $VERSION"
-            exit 0
-            ;;
+        u) check_for_updates; exit 0 ;;
+        v) show_version; exit 0 ;;
         *) echo "Usage: inf_docker [-d] [-e ENV] [-p SECRET_PATH] [-u] [-v]"; exit 1 ;;
     esac
 done
