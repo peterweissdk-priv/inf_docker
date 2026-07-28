@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-VERSION="0.2.5"
+VERSION="0.2.6"
 SCRIPT_URL="https://raw.githubusercontent.com/peterweissdk/inf_docker/main/inf_docker"
 
 # --- FUNCTIONS ---

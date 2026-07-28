@@ -2,7 +2,7 @@
 set -e
 
 INSTALL_PATH="/usr/local/bin/inf_docker"
-SCRIPT_URL="https://raw.githubusercontent.com/peterweissdk/inf_docker/main/inf_docker"
+SCRIPT_URL="https://raw.githubusercontent.com/peterweissdk-priv/inf_docker/main/inf_docker"
 
 echo "📥 Downloading inf_docker..."
 curl -fsSL "$SCRIPT_URL" -o /tmp/inf_docker
