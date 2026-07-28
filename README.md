@@ -5,7 +5,7 @@ A script to start Docker Compose stacks with secrets injected from [Infisical](h
 ## Installation
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/peterweissdk/inf_docker/main/install_inf_docker.sh | bash
+curl -fsSL https://raw.githubusercontent.com/peterweissdk-priv/inf_docker/main/install_inf_docker.sh | bash
 ```
 
 This installs `inf_docker` to `/usr/local/bin/` and optionally generates a template `inf.env` file.
