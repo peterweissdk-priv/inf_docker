@@ -1,8 +1,18 @@
-# inf_docker
+# 💾 inf_docker
 
 A script to start Docker Compose stacks with secrets injected from [Infisical](https://infisical.com/) at runtime.
 
-## Installation
+## ✨ Features
+
+- Inject secrets from Infisical into Docker Compose at runtime
+- Support for multiple environments (prod, dev, staging)
+- Detached mode for background execution
+- Auto-update functionality
+- Simple configuration via `inf.env` file
+
+## 🚀 Quick Start
+
+### Installation
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/peterweissdk-priv/inf_docker/main/install_inf_docker.sh | bash
@@ -10,7 +20,7 @@ curl -fsSL https://raw.githubusercontent.com/peterweissdk-priv/inf_docker/main/i
 
 This installs `inf_docker` to `/usr/local/bin/` and optionally generates a template `inf.env` file.
 
-## Usage
+### Usage
 
 Run from a directory containing your `docker-compose.yml`:
 
@@ -32,7 +42,7 @@ inf_docker -d -e staging -p /staging/secrets  # Combine options
 | `-u` | Check for updates and install if available |
 | `-v` | Show version |
 
-## Configuration
+### Configuration
 
 Create an `inf.env` file in your docker compose directory:
 
@@ -43,12 +53,12 @@ INF_SECRET_PATH=/your/secret/path
 
 Command-line arguments (`-e`, `-p`) take precedence over values in `inf.env`.
 
-## Requirements
+## ⚙️ Requirements
 
 - [Infisical CLI](https://infisical.com/docs/cli/overview) installed and authenticated
 - Docker and Docker Compose
 
-## Setup Infisical CLI
+### Setup Infisical CLI
 
 Install Infisical CLI (Debian/Ubuntu):
 
@@ -69,3 +79,24 @@ Initialize a docker compose directory with Infisical:
 cd /path/to/your/docker-compose-project
 infisical init
 ```
+
+## 📝 Directory Structure
+
+```
+your-project/
+├── docker-compose.yml    # Your Docker Compose configuration
+├── inf.env               # inf_docker configuration (INF_ENV, INF_SECRET_PATH)
+└── .infisical.json       # Infisical project config (created by `infisical init`)
+```
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 🆘 Support
+
+If you encounter any issues or need support, please file an issue on the GitHub repository.
+
+## 📄 License
+
+This project is licensed under the GNU GENERAL PUBLIC LICENSE v3.0 - see the [LICENSE](LICENSE) file for details
